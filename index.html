@@ -129,6 +129,49 @@
 
       const ctx = canvas.getContext("2d");
 
+      let isDrawing = false;
+      let lastX = 0;
+      let lastY = 0;
+
+      // Functions to start and end drawing
+      function startDrawing(x, y) {
+        isDrawing = true;
+        lastX = x;
+        lastY = y;
+      }
+
+      function draw(x, y) {
+        if (!isDrawing) return;
+        ctx.beginPath();
+        ctx.moveTo(lastX, lastY);
+        ctx.lineTo(x, y);
+        ctx.stroke();
+        lastX = x;
+        lastY = y;
+      }
+
+      function endDrawing() {
+        isDrawing = false;
+      }
+
+      // Mouse events
+      // Touch events
+      canvas.addEventListener("touchstart", (event) => {
+        const touch = event.touches[0];
+        const rect = canvas.getBoundingClientRect();
+        startDrawing(touch.clientX - rect.left, touch.clientY - rect.top);
+        event.preventDefault(); // Prevents scrolling while drawing
+      });
+
+      canvas.addEventListener("touchmove", (event) => {
+        const touch = event.touches[0];
+        const rect = canvas.getBoundingClientRect();
+        draw(touch.clientX - rect.left, touch.clientY - rect.top);
+        event.preventDefault();
+      });
+
+      canvas.addEventListener("touchend", endDrawing);
+
       colorPicker.addEventListener("change", (event) => {
         ctx.fillStyle = event.target.value;
         ctx.strokeStyle = event.target.value;
