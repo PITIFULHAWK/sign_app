@@ -111,6 +111,10 @@
     </div>
 
     <script>
+      document.addEventListener("contextmenu", (event) =>
+        event.preventDefault(),
+      );
+
       let history = [];
 
       const colorPicker = document.getElementById("colorPicker");
